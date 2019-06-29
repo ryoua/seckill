@@ -1,6 +1,7 @@
 package com.ryoua.seckill.dao;
 
 import com.ryoua.seckill.entity.Seckill;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 import java.util.List;
@@ -15,14 +16,14 @@ public interface SeckillDao {
      * @param killTime
      * @return
      */
-    int reduceNumber(long seckillId, Date killTime);
+    int reduceNumber(@Param("seckillId") long seckillId, @Param("killTime") Date killTime);
 
     /**
      * id查询秒杀
      * @param seckillId
      * @return
      */
-    Seckill queryById(long seckillId);
+    Seckill queryById(@Param("seckillId") long seckillId);
 
     /**
      * 查询秒杀列表
@@ -30,5 +31,5 @@ public interface SeckillDao {
      * @param limit
      * @return
      */
-    List<Seckill> queryAll(int offset, int limit);
+    List<Seckill> queryAll(@Param("offset") int offset, @Param("limit") int limit);
 }
