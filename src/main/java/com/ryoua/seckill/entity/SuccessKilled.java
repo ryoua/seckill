@@ -11,6 +11,7 @@ public class SuccessKilled {
     private long userPhone;
     private short state;
     private Date creteTime;
+    private Seckill seckill;
 
     public SuccessKilled() {}
 
@@ -19,6 +20,14 @@ public class SuccessKilled {
         this.userPhone = userPhone;
         this.state = state;
         this.creteTime = creteTime;
+    }
+
+    public Seckill getSeckill() {
+        return seckill;
+    }
+
+    public void setSeckill(Seckill seckill) {
+        this.seckill = seckill;
     }
 
     public long getSeckillId() {
