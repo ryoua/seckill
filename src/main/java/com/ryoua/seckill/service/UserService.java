@@ -1,9 +1,9 @@
 package com.ryoua.seckill.service;
 
 import com.ryoua.seckill.entity.User;
-import com.ryoua.seckill.mapper.UserMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.ryoua.seckill.vo.LoginVo;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @Author ryoua Created on 2019-07-06
@@ -16,4 +16,6 @@ public interface UserService {
      * @return
      */
     public User getUserById(long id);
+
+    String login(HttpServletResponse response, LoginVo loginVo);
 }
