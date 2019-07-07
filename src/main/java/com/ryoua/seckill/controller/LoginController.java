@@ -23,11 +23,21 @@ public class LoginController {
     private UserService userService;
     private static Logger logger = LoggerFactory.getLogger(LoginController.class);
 
+    /**
+     * 登录页面
+     * @return
+     */
     @RequestMapping("/to_login")
     public String toLogin() {
         return "login";
     }
 
+    /**
+     * 登录
+     * @param response
+     * @param loginVo
+     * @return
+     */
     @RequestMapping("/do_login")
     @ResponseBody
     public Result<String> doLogin(HttpServletResponse response, @Valid LoginVo loginVo) {

@@ -26,6 +26,12 @@ public class GoodsController {
     @Autowired
     private GoodsService goodsService;
 
+    /**
+     * 展示商品列表
+     * @param model
+     * @param user
+     * @return
+     */
     @RequestMapping("/to_list")
     public String list(Model model, User user) {
         model.addAttribute("user", user);
@@ -34,6 +40,13 @@ public class GoodsController {
         return "goods_list";
     }
 
+    /**
+     * 商品详情
+     * @param model
+     * @param user
+     * @param goodsId
+     * @return
+     */
     @RequestMapping("/to_detail/{goodsId}")
     public String goodsDetail(Model model, User user, @PathVariable("goodsId") long goodsId) {
         model.addAttribute("user", user);

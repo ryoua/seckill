@@ -17,5 +17,11 @@ public interface UserService {
      */
     public User getUserById(long id);
 
+    /**
+     * 登录
+     * @param response
+     * @param loginVo
+     * @return
+     */
     String login(HttpServletResponse response, LoginVo loginVo);
 }
