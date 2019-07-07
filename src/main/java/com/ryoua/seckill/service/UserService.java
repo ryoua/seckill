@@ -8,12 +8,12 @@ import org.springframework.stereotype.Service;
 /**
  * @Author ryoua Created on 2019-07-06
  */
-@Service
-public class UserService {
-    @Autowired
-    private UserMapper userMapper;
+public interface UserService {
 
-    public User getUserById(int id) {
-        return userMapper.getUserById(id);
-    }
+    /**
+     * 根据id找到用户
+     * @param id
+     * @return
+     */
+    public User getUserById(long id);
 }

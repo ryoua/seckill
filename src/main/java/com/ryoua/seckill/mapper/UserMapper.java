@@ -2,7 +2,6 @@ package com.ryoua.seckill.mapper;
 
 
 import com.ryoua.seckill.entity.User;
-import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -18,14 +17,6 @@ public interface UserMapper {
      * @param id
      * @return
      */
-    @Select(value = "select * from user where id = #{id}")
-    public User getUserById(@Param("id") int id);
-
-    /**
-     * 增加用户
-     * @param user
-     * @return
-     */
-    @Insert(value = "insert into user(id, name) values (#{id}, #{name}")
-    public int AddUser(User user);
+    @Select(value = "select * from sk_user where id = #{id}")
+    public User getUserById(@Param("id") long id);
 }
