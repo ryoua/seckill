@@ -1,5 +1,6 @@
 package com.ryoua.seckill.service.Impl;
 
+import com.ryoua.seckill.entity.SeckillGoods;
 import com.ryoua.seckill.mapper.GoodsMapper;
 import com.ryoua.seckill.service.GoodsService;
 import com.ryoua.seckill.vo.GoodsVo;
@@ -24,5 +25,12 @@ public class GoodsServiceImpl implements GoodsService {
     @Override
     public GoodsVo getGoodsVoByGoodsId(long goodsId) {
         return goodsMapper.getGoodsVoByGoodsId(goodsId);
+    }
+
+    @Override
+    public void reduceStock(GoodsVo goods){
+        SeckillGoods sg = new SeckillGoods();
+        sg.setGoodsId(goods.getId());
+        goodsMapper.reduceStock(sg);
     }
 }

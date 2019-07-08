@@ -9,7 +9,7 @@ import java.util.List;
  */
 public interface GoodsService {
     /**
-     * 得到商品列表
+     * 查询商品列表
      * @return
      */
     public List<GoodsVo> listGoodsVo();
@@ -20,4 +20,10 @@ public interface GoodsService {
      * @return
      */
     public GoodsVo getGoodsVoByGoodsId(long goodsId);
+
+    /**
+     * 减少库存，每次减一
+     * @return
+     */
+    public void reduceStock(GoodsVo goods);
 }

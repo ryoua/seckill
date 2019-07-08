@@ -10,6 +10,7 @@ import com.ryoua.seckill.service.UserService;
 import com.ryoua.seckill.utils.Md5Util;
 import com.ryoua.seckill.utils.StringUtil;
 import com.ryoua.seckill.vo.LoginVo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,8 +63,23 @@ public class UserServiceImpl implements UserService {
     public void addCookie(HttpServletResponse response, String token, User user) {
         redisService.set(UserKey.token, token, user);
         Cookie cookie = new Cookie(COOKIE_NAME_TOKEN, token);
-        cookie.setMaxAge(UserKey.TOKEN_EXPIRE);
+        cookie.setMaxAge(UserKey.token.expireSeconds());
         cookie.setPath("/");
         response.addCookie(cookie);
+    }
+
+    /**
+     * 根据token获取用户信息
+     */
+    public User getByToken(HttpServletResponse response, String token) {
+        if (StringUtils.isEmpty(token)){
+            return null;
+        }
+        User user = redisService.get(UserKey.token, token, User.class);
+        //延长有效期，有效期等于最后一次操作+有效期
+        if (user != null){
+            addCookie(response, token, user);
+        }
+        return user;
     }
 }

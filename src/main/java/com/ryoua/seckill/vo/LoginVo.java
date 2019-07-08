@@ -1,10 +1,17 @@
 package com.ryoua.seckill.vo;
 
+import com.ryoua.seckill.config.IsMobile;
+
+import javax.validation.constraints.NotNull;
+
 /**
  * @Author ryoua Created on 2019-07-07
  */
 public class LoginVo {
+    @NotNull
+    @IsMobile
     private String mobile;
+    @NotNull
     private String password;
 
     public String getMobile() {

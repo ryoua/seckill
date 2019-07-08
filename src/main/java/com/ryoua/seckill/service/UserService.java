@@ -24,4 +24,12 @@ public interface UserService {
      * @return
      */
     String login(HttpServletResponse response, LoginVo loginVo);
+
+    /**
+     * 根据Token获取用户
+     * @param response
+     * @param token
+     * @return
+     */
+    public User getByToken(HttpServletResponse response, String token);
 }
