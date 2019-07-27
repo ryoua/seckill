@@ -29,7 +29,7 @@ public class UserService {
     @Autowired
     RedisService redisService;
 
-    private static final String COOKIE_NAME_TOKEN = "token";
+    public static final String COOKIE_NAME_TOKEN = "token";
 
     public User getById(long id) {
         return userMapper.getById(id);
@@ -48,18 +48,26 @@ public class UserService {
         String calcPass = MD5Util.formPassToDBPass(formPass, saltDB);
         if (!calcPass.equals(dbPass))
             throw new GlobalException(CodeMsg.PASSWORD_ERROR);
+        addCookie(response, user) ;
+        return true;
+    }
+
+    public User getByToken(HttpServletResponse response, String token) {
+        if (StringUtils.isEmpty(token))
+            return null;
+        User user = redisService.get(UserKey.token, token, User.class);
+        // 延迟Session的有效期
+        if (user != null)
+            addCookie(response, user);
+        return user;
+    }
+
+    private void addCookie(HttpServletResponse response, User user) {
         String token = UUIDUtil.uuid();
         redisService.set(UserKey.token, token, user);
         Cookie cookie = new Cookie(COOKIE_NAME_TOKEN, token);
         cookie.setMaxAge(UserKey.token.expireSeconds());
         cookie.setPath("/");
         response.addCookie(cookie);
-        return true;
-    }
-
-    public User getByToken(String token) {
-        if (StringUtils.isEmpty(token))
-            return null;
-        return redisService.get(UserKey.token, token, User.class);
     }
 }
