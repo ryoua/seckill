@@ -2,6 +2,7 @@ package com.ryoua.seckill.redis;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
@@ -9,6 +10,7 @@ import redis.clients.jedis.JedisPoolConfig;
  * @Author: ryoua
  * @Create: 2019-07-27 12:51
  */
+@Component
 public class RedisPoolFactory {
 
     @Autowired
