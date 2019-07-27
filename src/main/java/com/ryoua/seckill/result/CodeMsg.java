@@ -20,6 +20,11 @@ public class CodeMsg {
     public static CodeMsg MOBILE_NOT_EXIST = new CodeMsg(500214, "手机号不存在");
     public static CodeMsg PASSWORD_ERROR = new CodeMsg(500215, "密码错误");
 
+    public CodeMsg fillArgs(Object... args) {
+        int code = this.code;
+        String message = String.format(this.msg, args);
+        return new CodeMsg(code, message);
+    }
 
     private CodeMsg(int code, String msg) {
         this.code = code;

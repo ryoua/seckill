@@ -1,11 +1,22 @@
 package com.ryoua.seckill.vo;
 
+import com.ryoua.seckill.validator.IsMobile;
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.NotNull;
+
 /**
  * @Author: ryoua
  * @Create: 2019-07-27 14:22
  */
 public class LoginVo {
+
+    @NotNull
+    @IsMobile
     private String mobile;
+
+    @NotNull
+    @Length(min = 32)
     private String password;
 
     public String getMobile() {
