@@ -35,7 +35,7 @@ public class UserService {
         return userMapper.getById(id);
     }
 
-    public boolean login(HttpServletResponse response, LoginVo loginVo) {
+    public String login(HttpServletResponse response, LoginVo loginVo) {
         if (loginVo == null)
             throw new GlobalException(CodeMsg.SERVER_ERROR);
         String mobile = loginVo.getMobile();
@@ -50,7 +50,7 @@ public class UserService {
             throw new GlobalException(CodeMsg.PASSWORD_ERROR);
         String token = UUIDUtil.uuid();
         addCookie(response, token, user) ;
-        return true;
+        return token;
     }
 
     public User getByToken(HttpServletResponse response, String token) {

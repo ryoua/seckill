@@ -15,7 +15,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * @Author: ryoua
@@ -51,13 +50,13 @@ public class SeckillController {
         int stock = goods.getGoodsStock();
         if (stock <= 0) {
             model.addAttribute("errmsg", CodeMsg.MIAO_SHA_OVER.getMsg());
-            return "miaosha_failed";
+            return "seckill_fail";
         }
         // 判断是否秒杀到
         SeckillOrder order = orderService.getSeckillOrderByUserIdGoodsId(user.getId(), goodsId);
         if (order != null) {
             model.addAttribute("errmsg", CodeMsg.REPEATE_MIAOSHA.getMsg());
-            return "miaosha_failed";
+            return "seckill_fail";
         }
         // 秒杀
         OrderInfo orderInfo = seckillService.seckill(user, goods);
