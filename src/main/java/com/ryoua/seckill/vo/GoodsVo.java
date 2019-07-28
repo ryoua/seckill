@@ -1,29 +1,18 @@
-package com.ryoua.seckill.domain;
+package com.ryoua.seckill.vo;
+
+import com.ryoua.seckill.domain.Goods;
 
 import java.util.Date;
 
 /**
  * @Author: ryoua
- * @Create: 2019-07-28 12:53
+ * @Create: 2019-07-28 12:55
  */
-public class MSGoods {
-    private Long id;
-    private Long goodsId;
+public class GoodsVo extends Goods {
+    private Double seckillPrice;
     private Integer stockCount;
     private Date startDate;
     private Date endDate;
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-    public Long getGoodsId() {
-        return goodsId;
-    }
-    public void setGoodsId(Long goodsId) {
-        this.goodsId = goodsId;
-    }
     public Integer getStockCount() {
         return stockCount;
     }
@@ -41,5 +30,13 @@ public class MSGoods {
     }
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public Double getSeckillPrice() {
+        return seckillPrice;
+    }
+
+    public void setSeckillPrice(Double seckillPrice) {
+        this.seckillPrice = seckillPrice;
     }
 }

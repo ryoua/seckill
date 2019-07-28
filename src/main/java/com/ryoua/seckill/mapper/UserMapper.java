@@ -12,7 +12,7 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface UserMapper {
 
-    @Select("select * from ms_user where id = #{id}")
+    @Select("select * from seckill_user where id = #{id}")
     public User getById(@Param("id") long id);
 
 }

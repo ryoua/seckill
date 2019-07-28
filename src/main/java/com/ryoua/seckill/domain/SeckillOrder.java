@@ -4,7 +4,7 @@ package com.ryoua.seckill.domain;
  * @Author: ryoua
  * @Create: 2019-07-28 12:53
  */
-public class MSOrder {
+public class SeckillOrder {
     private Long id;
     private Long userId;
     private Long  orderId;
