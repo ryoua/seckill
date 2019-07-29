@@ -47,7 +47,7 @@ public class SeckillController {
             return "login";
         // 判断库存
         GoodsVo goods = goodsService.getGoodsVoByGoodsId(goodsId);
-        int stock = goods.getGoodsStock();
+        int stock = goods.getStockCount();
         if (stock <= 0) {
             model.addAttribute("errmsg", CodeMsg.MIAO_SHA_OVER.getMsg());
             return "seckill_fail";
