@@ -28,4 +28,7 @@ public class MD5Util {
         return md5(str);
     }
 
+    public static void main(String[] args) {
+        System.out.println(inputPassToDbPass("123456", "lweqk23bgf3"));
+    }
 }

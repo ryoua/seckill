@@ -32,7 +32,31 @@ public class UserService {
     public static final String COOKIE_NAME_TOKEN = "token";
 
     public User getById(long id) {
-        return userMapper.getById(id);
+        User user = redisService.get(UserKey.getById, "" + id, User.class);
+        if (user != null)
+            return user;
+        user = userMapper.getById(id);
+        if (user != null)
+            redisService.set(UserKey.getById, "" + id, user);
+        return user;
+    }
+
+    public boolean updatePassword(String token, long id, String formPass) {
+        //取user
+        User user = getById(id);
+        if(user == null) {
+            throw new GlobalException(CodeMsg.MOBILE_NOT_EXIST);
+        }
+        //更新数据库
+        User toBeUpdate = new User();
+        toBeUpdate.setId(id);
+        toBeUpdate.setPassword(MD5Util.formPassToDBPass(formPass, user.getSalt()));
+        userMapper.update(toBeUpdate);
+        //处理缓存
+        redisService.delete(UserKey.getById, ""+id);
+        user.setPassword(toBeUpdate.getPassword());
+        redisService.set(UserKey.token, token, user);
+        return true;
     }
 
     public String login(HttpServletResponse response, LoginVo loginVo) {
