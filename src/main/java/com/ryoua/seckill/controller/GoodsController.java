@@ -3,8 +3,10 @@ package com.ryoua.seckill.controller;
 import com.ryoua.seckill.domain.User;
 import com.ryoua.seckill.redis.GoodsKey;
 import com.ryoua.seckill.redis.RedisService;
+import com.ryoua.seckill.result.Result;
 import com.ryoua.seckill.service.GoodsService;
 import com.ryoua.seckill.service.UserService;
+import com.ryoua.seckill.vo.GoodsDetailVo;
 import com.ryoua.seckill.vo.GoodsVo;
 
 import javax.servlet.http.HttpServletRequest;
@@ -56,7 +58,6 @@ public class GoodsController {
         model.addAttribute("user", user);
         List<GoodsVo> goodsList = goodsService.listGoodsVo();
         model.addAttribute("goodsList", goodsList);
-//        return "goods_list";
         String html = redisService.get(GoodsKey.getGoodsList, "", String.class);
         if (!StringUtils.isEmpty(html))
             return html;
@@ -110,4 +111,33 @@ public class GoodsController {
     }
 
 
+    @RequestMapping(value = "/to_detail2/{goodsId}", produces = "text/html")
+    @ResponseBody
+    public Result<GoodsDetailVo> detail2(User user,
+                                         @PathVariable("goodsId") long goodsId) {
+
+        GoodsVo goods = goodsService.getGoodsVoByGoodsId(goodsId);
+        long startTime = goods.getStartDate().getTime();
+        long endTime = goods.getEndDate().getTime();
+        long now = System.currentTimeMillis();
+        int status;
+        int remainSeconds;
+        if (now < startTime) {
+            status = 0;
+            remainSeconds = (int) ((startTime - now) / 1000);
+        } else if (now > endTime) {
+            status = 2;
+
+            remainSeconds = -1;
+        } else {
+            status = 1;
+            remainSeconds = 0;
+        }
+        GoodsDetailVo goodsDetailVo = new GoodsDetailVo();
+        goodsDetailVo.setGoodsVo(goods);
+        goodsDetailVo.setRemainSeconds(remainSeconds);
+        goodsDetailVo.setSeckillStatus(status);
+        goodsDetailVo.setUser(user);
+        return Result.success(goodsDetailVo);
+    }
 }
