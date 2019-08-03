@@ -2,10 +2,7 @@ package com.ryoua.seckill.controller;
 
 import com.ryoua.seckill.domain.User;
 import com.ryoua.seckill.redis.GoodsKey;
-import com.ryoua.seckill.redis.RedisService;
 import com.ryoua.seckill.result.Result;
-import com.ryoua.seckill.service.GoodsService;
-import com.ryoua.seckill.service.UserService;
 import com.ryoua.seckill.vo.GoodsDetailVo;
 import com.ryoua.seckill.vo.GoodsVo;
 
@@ -32,16 +29,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/goods")
-public class GoodsController {
-
-    @Autowired
-    UserService userService;
-
-    @Autowired
-    GoodsService goodsService;
-
-    @Autowired
-    RedisService redisService;
+public class GoodsController extends BasicController {
 
     @Autowired
     ThymeleafViewResolver thymeleafViewResolver;

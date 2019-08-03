@@ -26,22 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 @RequestMapping("/miaosha")
-public class SeckillController {
-
-    @Autowired
-    UserService userService;
-
-    @Autowired
-    RedisService redisService;
-
-    @Autowired
-    GoodsService goodsService;
-
-    @Autowired
-    OrderService orderService;
-
-    @Autowired
-    SeckillService seckillService;
+public class SeckillController extends BasicController {
 
     @RequestMapping(value = "/do_miaosha", method = RequestMethod.POST)
     @ResponseBody
