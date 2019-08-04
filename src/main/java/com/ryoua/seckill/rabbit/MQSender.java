@@ -7,7 +7,7 @@ import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import static com.ryoua.seckill.rabbit.MQConfig.QUEUE;
+import static com.ryoua.seckill.rabbit.MQConfig.SECKILL_QUEUE;
 
 /**
  * @Author: ryoua
@@ -24,7 +24,12 @@ public class MQSender {
     public void send(Object message) {
         String msg = RedisService.beanToString(message);
         logger.info("send message: " + msg);
-        amqpTemplate.convertAndSend(QUEUE, msg);
+        amqpTemplate.convertAndSend(SECKILL_QUEUE, msg);
     }
 
+    public void sendSeckillMessage(SeckillMessage message) {
+        String msg = RedisService.beanToString(message);
+        logger.info("send message: " + msg);
+        amqpTemplate.convertAndSend(SECKILL_QUEUE, msg);
+    }
 }

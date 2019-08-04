@@ -12,11 +12,11 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class MQConfig {
 
-    public static final String QUEUE = "queue";
+    public static final String SECKILL_QUEUE = "seckill.queue";
 
     @Bean
     public Queue queue() {
-        return new Queue(QUEUE, true);
+        return new Queue(SECKILL_QUEUE, true);
     }
 
 }

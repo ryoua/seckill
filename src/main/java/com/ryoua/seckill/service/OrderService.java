@@ -27,7 +27,6 @@ public class OrderService {
     RedisService redisService;
 
     public SeckillOrder getSeckillOrderByUserIdGoodsId(Long userId, long goodsId) {
-//        return orderMapper.getSeckillOrderByUserIdGoodsId(userId, goodsId);
         return redisService.get(OrderKey.getSeckillOrderByUidGid, "" + userId + "_" + goodsId, SeckillOrder.class);
     }
 
@@ -43,10 +42,10 @@ public class OrderService {
         orderInfo.setOrderChannel(1);
         orderInfo.setStatus(0);
         orderInfo.setUserId(user.getId());
-        long orderId = orderMapper.insert(orderInfo);
+        orderMapper.insert(orderInfo);
         SeckillOrder seckillOrder = new SeckillOrder();
         seckillOrder.setGoodsId(goods.getId());
-        seckillOrder.setOrderId(orderId);
+        seckillOrder.setOrderId(orderInfo.getId());
         seckillOrder.setUserId(user.getId());
         orderMapper.insertSeckillOrder(seckillOrder);
         redisService.set(OrderKey.getSeckillOrderByUidGid, "" + user.getId() + "_" + goods.getId(), seckillOrder);
@@ -55,5 +54,10 @@ public class OrderService {
 
     public OrderInfo getOrderById(Long orderId) {
         return orderMapper.getOrderById(orderId);
+    }
+
+    public void deleteOrders() {
+        orderMapper.deleteOrders();
+        orderMapper.deleteSeckillOrders();
     }
 }

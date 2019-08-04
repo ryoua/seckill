@@ -24,4 +24,7 @@ public interface GoodsMapper {
 
     @Update("update seckill_goods set stock_count = stock_count - 1 where goods_id = #{goodsId} and stock_count > 0")
     int reduceStock(SeckillGoods goods);
+
+    @Update("update seckill_goods set stock_count = #{stockCount} where goods_id = #{goodsId}")
+    int resetStock(SeckillGoods g);
 }

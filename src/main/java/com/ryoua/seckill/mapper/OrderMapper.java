@@ -23,4 +23,10 @@ public interface OrderMapper {
 
     @Select("select * from order_info where id = #{orderId}")
     OrderInfo getOrderById(Long orderId);
+
+    @Delete("delete from order_info")
+    public void deleteOrders();
+
+    @Delete("delete from seckill_order")
+    public void deleteSeckillOrders();
 }
