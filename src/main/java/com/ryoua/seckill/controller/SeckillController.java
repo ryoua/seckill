@@ -31,24 +31,25 @@ public class SeckillController extends BasicController {
     @RequestMapping(value = "/do_miaosha", method = RequestMethod.POST)
     @ResponseBody
     public Result<OrderInfo> list(Model model, User user,
-                       @RequestParam("goodsId")long goodsId) {
+                       @RequestParam("goodsId")Long goodsId) {
         model.addAttribute("user", user);
         if (user == null)
             return Result.error(CodeMsg.SESSION_ERROR);
-        // 判断库存
-        GoodsVo goods = goodsService.getGoodsVoByGoodsId(goodsId);
-        int stock = goods.getStockCount();
-        if (stock <= 0) {
-            return Result.error(CodeMsg.MIAO_SHA_OVER);
-        }
-        // 判断是否秒杀到
-        SeckillOrder order = orderService.getSeckillOrderByUserIdGoodsId(user.getId(), goodsId);
-        if (order != null) {
-            return Result.error(CodeMsg.REPEATE_MIAOSHA);
-        }
-        // 秒杀
-        OrderInfo orderInfo = seckillService.seckill(user, goods);
-        return Result.success(orderInfo);
-    }
+//        // 判断库存
+//        GoodsVo goods = goodsService.getGoodsVoByGoodsId(goodsId);
+//        int stock = goods.getStockCount();
+//        if (stock <= 0) {
+//            return Result.error(CodeMsg.MIAO_SHA_OVER);
+//        }
+//        // 判断是否秒杀到
+//        SeckillOrder order = orderService.getSeckillOrderByUserIdGoodsId(user.getId(), goodsId);
+//        if (order != null) {
+//            return Result.error(CodeMsg.REPEATE_MIAOSHA);
+//        }
+//        // 秒杀
+//        OrderInfo orderInfo = seckillService.seckill(user, goods);
+//        return Result.success(orderInfo);
 
+
+    }
 }

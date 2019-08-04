@@ -57,9 +57,9 @@ public class GoodsController extends BasicController {
         return html;
     }
 
-    @RequestMapping(value = "/to_detail/{goodsId}", produces = "text/html")
+    @RequestMapping(value = "/to_detail2/{goodsId}", produces = "text/html")
     @ResponseBody
-    public String detail(HttpServletRequest request,
+    public String detail2(HttpServletRequest request,
                          HttpServletResponse response,
                          Model model,
                          User user,
@@ -99,10 +99,10 @@ public class GoodsController extends BasicController {
     }
 
 
-    @RequestMapping(value = "/to_detail2/{goodsId}", produces = "text/html")
+    @RequestMapping(value = "/detail/{goodsId}")
     @ResponseBody
-    public Result<GoodsDetailVo> detail2(User user,
-                                         @PathVariable("goodsId") long goodsId) {
+    public Result<GoodsDetailVo> detail(HttpServletRequest request, HttpServletResponse response, Model model, User user,
+                                        @PathVariable("goodsId")Long goodsId) {
 
         GoodsVo goods = goodsService.getGoodsVoByGoodsId(goodsId);
         long startTime = goods.getStartDate().getTime();

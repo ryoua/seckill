@@ -4,6 +4,8 @@ import com.ryoua.seckill.domain.OrderInfo;
 import com.ryoua.seckill.domain.SeckillOrder;
 import com.ryoua.seckill.domain.User;
 import com.ryoua.seckill.mapper.OrderMapper;
+import com.ryoua.seckill.redis.OrderKey;
+import com.ryoua.seckill.redis.RedisService;
 import com.ryoua.seckill.vo.GoodsVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,9 +23,12 @@ public class OrderService {
     @Autowired
     OrderMapper orderMapper;
 
+    @Autowired
+    RedisService redisService;
 
     public SeckillOrder getSeckillOrderByUserIdGoodsId(Long userId, long goodsId) {
-        return orderMapper.getSeckillOrderByUserIdGoodsId(userId, goodsId);
+//        return orderMapper.getSeckillOrderByUserIdGoodsId(userId, goodsId);
+        return redisService.get(OrderKey.getSeckillOrderByUidGid, "" + userId + "_" + goodsId, SeckillOrder.class);
     }
 
     @Transactional
@@ -44,6 +49,11 @@ public class OrderService {
         seckillOrder.setOrderId(orderId);
         seckillOrder.setUserId(user.getId());
         orderMapper.insertSeckillOrder(seckillOrder);
+        redisService.set(OrderKey.getSeckillOrderByUidGid, "" + user.getId() + "_" + goods.getId(), seckillOrder);
         return orderInfo;
+    }
+
+    public OrderInfo getOrderById(Long orderId) {
+        return orderMapper.getOrderById(orderId);
     }
 }
