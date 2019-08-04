@@ -9,16 +9,15 @@ import com.ryoua.seckill.redis.OrderKey;
 import com.ryoua.seckill.redis.SeckillKey;
 import com.ryoua.seckill.result.CodeMsg;
 import com.ryoua.seckill.result.Result;
+import com.ryoua.seckill.service.SeckillService;
 import com.ryoua.seckill.vo.GoodsVo;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -29,20 +28,27 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Controller
 @RequestMapping("/miaosha")
-public class SeckillController extends BasicController implements InitializingBean  {
+public class SeckillController extends BasicController implements InitializingBean {
 
     @Autowired
     MQSender mqSender;
 
     private Map<Long, Boolean> localOverMap = new ConcurrentHashMap<Long, Boolean>();
 
-    @RequestMapping(value = "/do_miaosha", method = RequestMethod.POST)
+    @RequestMapping(value = "/{path}/do_miaosha", method = RequestMethod.POST)
     @ResponseBody
     public Result<Integer> list(Model model, User user,
-                       @RequestParam("goodsId")Long goodsId) {
+                                @RequestParam("goodsId") Long goodsId,
+                                @PathVariable("path") String path) {
         model.addAttribute("user", user);
         if (user == null)
             return Result.error(CodeMsg.SESSION_ERROR);
+
+        //验证path
+        boolean check = seckillService.checkPath(user, goodsId, path);
+        if (!check) {
+            return Result.error(CodeMsg.REQUEST_ILLEGAL);
+        }
 
         boolean over = localOverMap.get(goodsId);
         if (over) return Result.error(CodeMsg.MIAO_SHA_OVER);
@@ -68,6 +74,7 @@ public class SeckillController extends BasicController implements InitializingBe
 
     /**
      * 初始化
+     *
      * @throws Exception
      */
     @Override
@@ -80,25 +87,43 @@ public class SeckillController extends BasicController implements InitializingBe
         }
     }
 
-    @RequestMapping(value="/result", method=RequestMethod.GET)
+    @RequestMapping(value = "/path", method = RequestMethod.GET)
     @ResponseBody
-    public Result<Long> miaoshaResult(Model model,User user,
-                                      @RequestParam("goodsId")long goodsId) {
+    public Result<String> getMiaoshaPath(HttpServletRequest request, User user,
+                                         @RequestParam("goodsId") long goodsId,
+                                         @RequestParam(value = "verifyCode", defaultValue = "0") int verifyCode
+    ) {
+        if (user == null) {
+            return Result.error(CodeMsg.SESSION_ERROR);
+        }
+//        boolean check = miaoshaService.checkVerifyCode(user, goodsId, verifyCode);
+//        if(!check) {
+//            return Result.error(CodeMsg.REQUEST_ILLEGAL);
+//        }
+        String path = seckillService.createSeckillPath(user, goodsId);
+        return Result.success(path);
+    }
+
+
+    @RequestMapping(value = "/result", method = RequestMethod.GET)
+    @ResponseBody
+    public Result<Long> miaoshaResult(Model model, User user,
+                                      @RequestParam("goodsId") long goodsId) {
         model.addAttribute("user", user);
-        if(user == null) {
+        if (user == null) {
             return Result.error(CodeMsg.SESSION_ERROR);
         }
         long result = seckillService.getMiaoshaResult(user.getId(), goodsId);
         return Result.success(result);
     }
 
-    @RequestMapping(value="/reset", method=RequestMethod.GET)
+    @RequestMapping(value = "/reset", method = RequestMethod.GET)
     @ResponseBody
     public Result<Boolean> reset(Model model) {
         List<GoodsVo> goodsList = goodsService.listGoodsVo();
-        for(GoodsVo goods : goodsList) {
+        for (GoodsVo goods : goodsList) {
             goods.setStockCount(10);
-            redisService.set(GoodsKey.getSeckillGoodsStock, ""+goods.getId(), 10);
+            redisService.set(GoodsKey.getSeckillGoodsStock, "" + goods.getId(), 10);
             localOverMap.put(goods.getId(), false);
         }
         redisService.delete(OrderKey.getSeckillOrderByUidGid);

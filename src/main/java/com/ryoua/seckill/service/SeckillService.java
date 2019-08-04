@@ -5,6 +5,8 @@ import com.ryoua.seckill.domain.SeckillOrder;
 import com.ryoua.seckill.domain.User;
 import com.ryoua.seckill.redis.RedisService;
 import com.ryoua.seckill.redis.SeckillKey;
+import com.ryoua.seckill.utils.MD5Util;
+import com.ryoua.seckill.utils.UUIDUtil;
 import com.ryoua.seckill.vo.GoodsVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -63,5 +65,22 @@ public class SeckillService {
     public void reset(List<GoodsVo> goodsList) {
         goodsService.resetStock(goodsList);
         orderService.deleteOrders();
+    }
+
+    public boolean checkPath(User user, long goodsId, String path) {
+        if(user == null || path == null) {
+            return false;
+        }
+        String pathOld = redisService.get(SeckillKey.getSeckillPath, ""+user.getId() + "_"+ goodsId, String.class);
+        return path.equals(pathOld);
+    }
+
+    public String createSeckillPath(User user, long goodsId) {
+        if(user == null || goodsId <=0) {
+            return null;
+        }
+        String str = MD5Util.md5(UUIDUtil.uuid()+"123456");
+        redisService.set(SeckillKey.getSeckillPath, ""+user.getId() + "_"+ goodsId, str);
+        return str;
     }
 }
