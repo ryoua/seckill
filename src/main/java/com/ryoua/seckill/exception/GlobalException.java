@@ -6,7 +6,7 @@ import com.ryoua.seckill.result.CodeMsg;
  * @Author: ryoua
  * @Create: 2019-07-27 16:19
  */
-public class GlobalException extends RuntimeException{
+public class GlobalException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
     private CodeMsg cm;

@@ -1,5 +1,6 @@
 package com.ryoua.seckill.controller;
 
+import com.google.common.util.concurrent.RateLimiter;
 import com.ryoua.seckill.domain.SeckillOrder;
 import com.ryoua.seckill.domain.User;
 import com.ryoua.seckill.rabbit.MQSender;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author: ryoua
@@ -33,6 +35,8 @@ public class SeckillController extends BasicController implements InitializingBe
     @Autowired
     MQSender mqSender;
 
+    RateLimiter rateLimiter = RateLimiter.create(10);
+
     private Map<Long, Boolean> localOverMap = new ConcurrentHashMap<Long, Boolean>();
 
     @RequestMapping(value = "/{path}/do_miaosha", method = RequestMethod.POST)
@@ -41,6 +45,9 @@ public class SeckillController extends BasicController implements InitializingBe
                                 @RequestParam("goodsId") Long goodsId,
                                 @PathVariable("path") String path) {
         model.addAttribute("user", user);
+        if (!rateLimiter.tryAcquire(1000, TimeUnit.MILLISECONDS))
+            return  Result.error(CodeMsg.ACCESS_LIMIT_REACHED);
+
         if (user == null)
             return Result.error(CodeMsg.SESSION_ERROR);
 
